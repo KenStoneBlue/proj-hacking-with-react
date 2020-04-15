@@ -12,12 +12,12 @@
   "author": "Ken Stone Blue",
   "license": "ISC",
   "babel": {
-         "presets": [
-             "es2015",
-             "react"
-         ]
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
- "jest": {
+  "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react",
@@ -50,5 +50,4 @@
     "react-router": "2.0.1",
     "superagent": "1.8.0"
   }
-
 }
