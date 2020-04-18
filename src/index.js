@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Detail from './pages/Detail';
 
 ReactDOM.render(
-    <Detail />,
+    <Detail message="Props to you bernie bro" />,
     document.getElementById('app')
 );
 
