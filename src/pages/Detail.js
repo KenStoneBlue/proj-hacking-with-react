@@ -1,8 +1,15 @@
 import React from 'react';
+import Chance from 'chance';
+
 
 class Detail extends React.Component {
     render() {
-        return <p>{this.props.message}</p>;
+        return( 
+          <div>
+          <p>Hello, {chance.first()}!</p>
+          <p>{this.props.message}</p>
+          </div>
+        );
     }
 }
 
