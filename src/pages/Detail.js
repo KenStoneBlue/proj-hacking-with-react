@@ -45,36 +45,11 @@ class Detail extends React.Component {
     }
 
     componentWillMount() {
+			console.log(`fetching `);
 
-      ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/commits').end((error, response) => {
-        console.log('response');
-        console.log(response);
-        if (!error && response) {
-            this.setState({ commits: response.body });
-        } else {
-            console.log('There was an error fetching from GitHub', error);
-        }
-      });
-
-      ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/forks').end((error, response) => {
-        console.log('response');
-        console.log(response);
-        if (!error && response) {
-            this.setState({ forks: response.body });
-        } else {
-            console.log('There was an error fetching from GitHub', error);
-        }
-      });
-
-      ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/pulls').end((error, response) => {
-        console.log('response');
-        console.log(response);
-        if (!error && response) {
-            this.setState({ pulls: response.body });
-        } else {
-            console.log('There was an error fetching from GitHub', error);
-        }
-      });
+		  this.fetchFeed('commits');
+		  this.fetchFeed('forks');
+		  this.fetchFeed('pulls');
 
       ajax.get('https://api.github.com/users/KenStoneBlue').end((error, response) => {
         console.log('response');
@@ -88,6 +63,27 @@ class Detail extends React.Component {
 
     }
 
+  	fetchFeed(type) {
+  		//if (this.props.params.repo === '') {
+  			// empty repo name, bail out!
+  			//return;
+  		//}
+  
+			console.log(`fetching ${type}`);
+  		const baseURL = 'https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react';
+  		//ajax.get(`${baseURL}/${this.props.params.repo}/${type}`).end((error, response) => {
+  		ajax.get(`${baseURL}/${type}`).end((error, response) => {
+  				if (!error && response) {
+  					this.saveFeed(type, response.body);
+  				} else {
+  					console.log(`Error fetching ${type}`, error);
+  				}
+  		});
+  	}
+  
+  	saveFeed(type, contents) {
+  		this.setState({ [type]: contents });
+  	}
 
   	renderCommits() {
   		return this.state.commits.map((commit, index) => {
