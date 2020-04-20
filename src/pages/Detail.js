@@ -1,4 +1,5 @@
 import React from 'react';
+import { IndexLink, Link } from 'react-router';
 import Chance from 'chance';
 import ajax from 'superagent';
 
@@ -23,7 +24,11 @@ class Detail extends React.Component {
             name: chance.first(),
             country: chance.country({ full: true }),
             people: people,
+            profile: [],
             commits: [],
+            forks: [],
+            pulls: [],
+            mode: 'commits',
         };
 
         console.log('this.state');
@@ -40,6 +45,7 @@ class Detail extends React.Component {
     }
 
     componentWillMount() {
+
       ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/commits').end((error, response) => {
         console.log('response');
         console.log(response);
@@ -50,11 +56,31 @@ class Detail extends React.Component {
         }
       });
 
+      ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/forks').end((error, response) => {
+        console.log('response');
+        console.log(response);
+        if (!error && response) {
+            this.setState({ forks: response.body });
+        } else {
+            console.log('There was an error fetching from GitHub', error);
+        }
+      });
+
+      ajax.get('https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react/pulls').end((error, response) => {
+        console.log('response');
+        console.log(response);
+        if (!error && response) {
+            this.setState({ pulls: response.body });
+        } else {
+            console.log('There was an error fetching from GitHub', error);
+        }
+      });
+
       ajax.get('https://api.github.com/users/KenStoneBlue').end((error, response) => {
         console.log('response');
         console.log(response);
         if (!error && response) {
-            this.setState({ commits: response.body });
+            this.setState({ profile: response.body });
         } else {
             console.log('There was an error fetching from GitHub', error);
         }
@@ -63,6 +89,40 @@ class Detail extends React.Component {
     }
 
 
+  	renderCommits() {
+  		return this.state.commits.map((commit, index) => {
+  			const author = commit.author ? commit.author.login : 'Anonymous';
+  
+  			return (<p key={index} className="github">
+  				<Link to={ `/user/${author}` }>{author}</Link>:	<a href={commit.html_url}>{commit.commit.message}</a>.
+  			</p>);
+  		});
+  	}
+  
+  	renderForks() {
+  		return this.state.forks.map((fork, index) => {
+  			const owner = fork.owner ? fork.owner.login : 'Anonymous';
+  
+  			return (<p key={index} className="github">
+  				<Link to={ `/user/${owner}` }>{owner}</Link>: forked to	<a href={fork.html_url}>{fork.html_url}</a> at {fork.created_at}.
+  			</p>);
+  		});
+  	}
+  
+  	renderPulls() {
+  		return this.state.pulls.map((pull, index) => {
+  			const user = pull.user ? pull.user.login : 'Anonymous';
+  
+  			return (<p key={index} className="github">
+  				<Link to={ `/user/${user}` }>{user}</Link>:	<a href={pull.html_url}>{pull.body}</a>.
+  			</p>);
+  		});
+  	}
+
+
+  	selectMode(mode) {
+  		this.setState({ mode: mode });
+  	}
 
 
     buttonClicked() {
@@ -77,6 +137,17 @@ class Detail extends React.Component {
     }
 
     render() {
+
+    		let content;
+    
+    		if (this.state.mode === 'commits') {
+    			content = this.renderCommits();
+    		} else if (this.state.mode === 'forks') {
+    			content = this.renderForks();
+    		} else {
+    			content = this.renderPulls();
+    		}
+
         return( 
           <div>
 
@@ -103,16 +174,27 @@ class Detail extends React.Component {
             <div>
             {this.state.commits.map((commit, index) => {
                 const author = commit.author ? commit.author.login : 'Anonymous';
-                return (<p key={index}><strong>{author}</strong>: <a href={commit.html_url}>{commit.commit.message}</a>.</p>);
+                return (<p key={index}> *** <strong>{author}</strong>: <a href={commit.html_url}>{commit.commit.message}</a>.</p>);
             })}
             </div>
 
+            <hr />
 
+      			{/* <p>You are here: <IndexLink to="/" activeClassName="active">Home</IndexLink> &gt; {this.props.params.repo}</p> */}
+      
+      			<button onClick={this.selectMode.bind(this, 'commits')} ref="commits">Show Commits</button>
+      			<button onClick={this.selectMode.bind(this, 'forks')} ref="forks">Show Forks</button>
+      			<button onClick={this.selectMode.bind(this, 'pulls')} ref="pulls">Show Pulls</button>
+      			{content}
 
 
           </div>
         );
     }
+
+
+
+
 }
 
 export default Detail;
