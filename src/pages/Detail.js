@@ -6,11 +6,24 @@ class Detail extends React.Component {
 
     constructor(props) {
         super(props);
+
+        const people = [];
+    
+        for (let i = 0; i < 10; i++) {
+            people.push({
+                name: chance.first(),
+                country: chance.country({ full: true })
+            });
+        }
     
         this.state = {
             name: chance.first(),
-            country: chance.country({ full: true })
+            country: chance.country({ full: true }),
+            people: people,
         };
+
+        console.log('this.state');
+        console.log(this.state);
     }
 
     shouldComponentUpdate(){
@@ -43,6 +56,11 @@ class Detail extends React.Component {
 
           <p>Hello, {chance.first()} from {chance.country({ full: true })}!</p>
           <p>Hello, {chance.first()} from {chance.country({ full: true })}!</p>
+
+          {this.state.people.map((person, index) => (<p key={index} >Hello, {person.name} from {person.country}!</p>))}
+
+
+
           <p>{this.props.message}</p>
           <button onClick={this.buttonClicked.bind(this)}>Meet Someone New</button>
           </div>
