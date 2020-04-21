@@ -148,6 +148,7 @@ class Detail extends React.Component {
 
         return( 
           <div>
+            <p><IndexLink to="/" activeClassName="active">Home</IndexLink> > {this.props.params.repo}</p>
 
             <p>Hello, {this.state.name} from {this.state.country}!</p>
   
@@ -155,7 +156,7 @@ class Detail extends React.Component {
   
             {this.state.people.map((person, index) => (<p key={index} >Hello, {person.name} from {person.country}!</p>))}
   
-            <p>{this.props.message}</p>
+            <p> -- {this.props.message} -- </p>
             <button onClick={this.buttonClicked.bind(this)}>Meet Someone New</button>
 
             <hr />
