@@ -11,6 +11,9 @@ class Detail extends React.Component {
 
         super(props);
 
+        console.log('props');
+        console.log(props);
+
         const people = [];
     
         for (let i = 0; i < 10; i++) {
@@ -70,9 +73,8 @@ class Detail extends React.Component {
   		//}
   
 			console.log(`fetching ${type}`);
-  		const baseURL = 'https://api.github.com/repos/KenStoneBlue/proj-hacking-with-react';
-  		//ajax.get(`${baseURL}/${this.props.params.repo}/${type}`).end((error, response) => {
-  		ajax.get(`${baseURL}/${type}`).end((error, response) => {
+  		const baseURL = 'https://api.github.com/repos/KenStoneBlue';
+  		ajax.get(`${baseURL}/${this.props.params.repo}/${type}`).end((error, response) => {
   				if (!error && response) {
   					this.saveFeed(type, response.body);
   				} else {
